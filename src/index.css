@@ -12,3 +12,68 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;
 }
+
+/*
+ * React Router v3 and below
+ */
+
+  <Router onUpdate={()=>window.Appcues.page()}/>
+
+/*
+ * React Router v4 and above
+ */
+
+  // In the `componentDidUpdate` of the component wrapping your entire app
+  // usually called <App />
+
+  function componentDidUpdate(prevProps) {
+    // NOTE: in order to have access to this information, you will need
+    // to wrap this component in the `withRouter` HOC
+
+    const { location: { pathname } } = this.props;
+    const previousLocation = prevProps.location.pathname;
+
+    if (pathname !== previousLocation) {
+      window.Appcues.page();
+    }
+  }
+
+  // NOTE: There are several different methods of listening to this route change in
+  // V4, but this one covers all edge cases not covered by other methods
+  // and is the one endorsed in the React Router v4 migration guide
+  // https://github.com/ReactTraining/react-router/issues/4278#issuecomment-299692502
+  
+  window.Appcues.identify(
+  "<<< USER_ID >>>", // unique, required
+  {
+
+    // recommended (optional) properties
+
+    createdAt: 1566932390, // Unix timestamp of user signup date
+    purchasedAd: 1566932395, // Unix timestamp of account purchase date (leave null if empty)
+    planTier: "Standard", // Current user’s plan tier
+    role: "Admin", // Current user’s role or permissions
+    accountId: "1234", // Current user's account ID
+    firstName: "John", // current user's first name
+
+    // additional suggestions
+
+    companyName: "Acme Corp", // Current user’s company name
+    email: "john.doe@example.com", // Current user's email
+    location: "90210", // a zipcode, state, or country enables location-based targeting
+    version: "2.0", // users on different versions may need to see different content
+    language: "spanish", // for multi-language applications
+    renewalDate: 1577880288 // to remind users to renew
+  }
+);
+
+Appcues.track("Event Name");
+
+// e.g. Clicked the purchase button
+Appcues.track("Clicked purchase button");
+
+// e.g. Submitted a help ticket
+Appcues.track("Submitted help ticket", {
+  url: "/support",
+  article: "installation"
+});
